@@ -1,4 +1,4 @@
-# A2-SD1 Hangman Project
+# A2-SD1 Hangman Project KN
 
 We have selected the classic Hangman word-guessing game as our project and will implement it using HTML, CSS, and JavaScript. This stack allows us to deliver an accessible browser-based experience without requiring additional installations.
 
@@ -6,9 +6,9 @@ We have selected the classic Hangman word-guessing game as our project and will 
 
 - Universally available platform: A standards-compliant browser is the only requirement, so the game is instantly accessible on mobiles. 
 - Rapid iteration: HTML and CSS speed up layout and visual experimentation, while JavaScript lets us implement the game loop, scoring rules, and input validation directly in the browser.
-- Easy deployment: The finished build can be hosted on any static web server or even bundled as part of coursework submissions without special packaging.
+- Easy deployment: The finished build can be hosted on any static web server or even bundled as part of coursework submissions without special packaging. KN
 
-## Activity 1 Group Guidance – Requirements/Creative Session
+## Activity 1 Group Guidance – Requirements/Creative Session KN
 
 1. Review all available projects before deciding which to develop.
 2. Consider your primary target audience (see Possible Project Target Demographics).
