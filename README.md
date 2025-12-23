@@ -10,14 +10,29 @@ We have selected the classic Hangman word-guessing game as our project and will 
 
 ## Activity 1 Group Guidance – Requirements/Creative Session KN
 
-1. Review all available projects before deciding which to develop.
+1. Review all available projects before deciding which to develop
+
+The group reviewed the three available mini-project options: Hangman, Hide and Seek, and a Chat App. After discussion, Hangman was selected as it has clearly defined rules, a manageable scope, and is well suited to iterative development using Agile methods. It allows the group to focus on core functionality without unnecessary complexity while still demonstrating good software design principles.
+
 2. Consider your primary target audience (see Possible Project Target Demographics).
-3. Create an overall specification based on user and system requirements (including HCI, game rules and the game mechanics—for example, what are the rules for the game, how will the game be controlled, and how will any non-player characters interact?).
-4. Create two different user profiles (based on your selected target type) that include basic details regarding each individual’s wants and needs associated with the game.
-5. Determine the project’s high-level functional specifications (for example, hardware requirements, operating system environment, application functions, collisions, AI, scores, timers, etc.).
-6. Determine the project’s high-level non-functional specifications (aesthetic, usability, ease of use, feedback style, basic needs, etc.).
-7. Create mock-ups for the overall look, user interface design, dialogue windows and input mechanisms.
-8. Construct basic storyboards associated with the game play.
-9. Identify and rank potential risks to the project’s success (such as technical knowledge, coding, testing, scope and dependencies). This should not include time management.
-10. Identify and establish your software development strategy.
-11. Define an overall test plan (this will be used later and may be repeated several times to ensure the project is successful).
+
+The primary target audience for the Hangman game is:
+
+Students and casual users aged 12–25
+
+Users looking for a simple, short-play, word-based game
+
+Players accessing the game on desktop or mobile browsers
+The game is designed to be easy to understand, quick to play, and accessible to users with different technical abilities.
+
+4. Create an overall specification based on user and system requirements (including HCI, game rules and the game mechanics—for example, what are the rules for the game, how will the game be controlled, and how will any non-player characters interact?).
+   
+6. Create two different user profiles (based on your selected target type) that include basic details regarding each individual’s wants and needs associated with the game.
+   
+8. Determine the project’s high-level functional specifications (for example, hardware requirements, operating system environment, application functions, collisions, AI, scores, timers, etc.).
+9. Determine the project’s high-level non-functional specifications (aesthetic, usability, ease of use, feedback style, basic needs, etc.).
+10. Create mock-ups for the overall look, user interface design, dialogue windows and input mechanisms.
+11. Construct basic storyboards associated with the game play.
+12. Identify and rank potential risks to the project’s success (such as technical knowledge, coding, testing, scope and dependencies). This should not include time management.
+13. Identify and establish your software development strategy.
+14. Define an overall test plan (this will be used later and may be repeated several times to ensure the project is successful).
