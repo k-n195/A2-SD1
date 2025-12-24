@@ -16,12 +16,6 @@ The group reviewed the three available mini-project options: Hangman, Hide and S
 
 2. Consider your primary target audience (see Possible Project Target Demographics).
 
-User Profiles:
-
-Profile 1 Michael: Age 17, short attention span wants fast paced gaming and results with minimal effort.
-
-Profile 2 Harry Age 22, Likes playing with friends and has a longer attention span, competitive and wants to win when playing against friends.
-
 The primary target audience for the Hangman game is:
 
 Students and casual users aged 12–25
@@ -34,6 +28,12 @@ The game is designed to be easy to understand, quick to play, and accessible to 
 4. Create an overall specification based on user and system requirements (including HCI, game rules and the game mechanics—for example, what are the rules for the game, how will the game be controlled, and how will any non-player characters interact?).
    
 6. Create two different user profiles (based on your selected target type) that include basic details regarding each individual’s wants and needs associated with the game.
+
+   User Profiles:
+
+Profile 1 Michael: Age 17, short attention span wants fast paced gaming and results with minimal effort.
+
+Profile 2 Harry Age 22, Likes playing with friends and has a longer attention span, competitive and wants to win when playing against friends.
    
 8. Determine the project’s high-level functional specifications (for example, hardware requirements, operating system environment, application functions, collisions, AI, scores, timers, etc.).
 9. Determine the project’s high-level non-functional specifications (aesthetic, usability, ease of use, feedback style, basic needs, etc.).
