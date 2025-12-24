@@ -16,6 +16,12 @@ The group reviewed the three available mini-project options: Hangman, Hide and S
 
 2. Consider your primary target audience (see Possible Project Target Demographics).
 
+User Profiles:
+
+Profile 1 Michael: Age 17, short attention span wants fast paced gaming and results with minimal effort.
+
+Profile 2 Harry Age 22, Likes playing with friends and has a longer attention span, competitive and wants to win when playing against friends.
+
 The primary target audience for the Hangman game is:
 
 Students and casual users aged 12–25
