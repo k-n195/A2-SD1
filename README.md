@@ -26,7 +26,11 @@ Players accessing the game on desktop or mobile browsers
 The game is designed to be easy to understand, quick to play, and accessible to users with different technical abilities.
 
 4. Create an overall specification based on user and system requirements (including HCI, game rules and the game mechanics—for example, what are the rules for the game, how will the game be controlled, and how will any non-player characters interact?).
-   
+
+Simple game with hints after failed attempts and letters already used in a grid to show that they are incorrect, could possibly be outlined in red to show failure and anything correct potentially outlined in green. Not too much information in large font and bold. Large font and boldness is proven to distract the target audience as at the end of the day they are looking for a fun and simple game to play without having to think too hard as we have opted for a younger target audience.
+
+5. Risks during testing and development.
+
 6. Create two different user profiles (based on your selected target type) that include basic details regarding each individual’s wants and needs associated with the game.
 
    User Profiles:
