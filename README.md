@@ -37,8 +37,18 @@ Profile 2 Harry Age 22, Likes playing with friends and has a longer attention sp
    
 8. Determine the project’s high-level functional specifications (for example, hardware requirements, operating system environment, application functions, collisions, AI, scores, timers, etc.).
 9. Determine the project’s high-level non-functional specifications (aesthetic, usability, ease of use, feedback style, basic needs, etc.).
-10. Create mock-ups for the overall look, user interface design, dialogue windows and input mechanisms.
-11. Construct basic storyboards associated with the game play.
-12. Identify and rank potential risks to the project’s success (such as technical knowledge, coding, testing, scope and dependencies). This should not include time management.
-13. Identify and establish your software development strategy.
-14. Define an overall test plan (this will be used later and may be repeated several times to ensure the project is successful).
+
+Hardware requirements (basic)
+
+For Basic/Classic Hangman (Web/Simple Apps):
+OS: Windows XP/7/10, Linux, iOS, Android.
+CPU: Any 2 GHz processor.
+RAM: 512 MB - 1 GB.
+Storage: < 1 GB.
+Graphics: Integrated graphics. 
+   
+11. Create mock-ups for the overall look, user interface design, dialogue windows and input mechanisms.
+12. Construct basic storyboards associated with the game play.
+13. Identify and rank potential risks to the project’s success (such as technical knowledge, coding, testing, scope and dependencies). This should not include time management.
+14. Identify and establish your software development strategy.
+15. Define an overall test plan (this will be used later and may be repeated several times to ensure the project is successful).
