@@ -46,6 +46,10 @@ CPU: Any 2 GHz processor.
 RAM: 512 MB - 1 GB.
 Storage: < 1 GB.
 Graphics: Integrated graphics. 
+
+Aesthetic:
+
+Going for a simple and sleek design that appeases the target audience being casual players aged 12-25, Little information that entices the user to play the game making it colorful and aethetically pleasing.
    
 11. Create mock-ups for the overall look, user interface design, dialogue windows and input mechanisms.
 12. Construct basic storyboards associated with the game play.
