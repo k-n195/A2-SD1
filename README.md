@@ -94,3 +94,51 @@ If external word lists or assets are used and become unavailable, the game may f
 14. Identify and establish your software development strategy.
 
 15. Define an overall test plan (this will be used later and may be repeated several times to ensure the project is successful).
+
+Opened the game to check it loads correctly.
+Expected: The word is hidden and all lives are available.
+Result: Pass.
+
+Guessed a correct letter.
+Expected: The letter appears in the word.
+Result: Pass.
+
+Guessed an incorrect letter.
+Expected: One life is removed.
+Result: Pass.
+
+Guessed a letter that appears more than once in the word.
+Expected: All matching letters appear.
+Result: Pass.
+
+Guessed the same letter twice.
+Expected: No life is lost and feedback is shown.
+Result: Pass.
+
+Made several incorrect guesses.
+Expected: The hangman image updates correctly.
+Result: Pass.
+
+Completed the word by guessing all letters.
+Expected: A win message is displayed.
+Result: Pass.
+
+Used all remaining lives.
+Expected: A game over message is displayed with the correct word.
+Result: Pass.
+
+Clicked the restart button.
+Expected: The game resets to its starting state.
+Result: Pass.
+
+Played the game using only the keyboard.
+Expected: The game remains fully playable.
+Result: Pass.
+
+Used the on-screen keyboard buttons.
+Expected: Letters register correctly.
+Result: Pass.
+
+Resized the screen to a mobile view.
+Expected: The layout remains readable and usable.
+Result: Pass.
