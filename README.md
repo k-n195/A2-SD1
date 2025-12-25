@@ -56,6 +56,12 @@ Aesthetic:
 Going for a simple and sleek design that appeases the target audience being casual players aged 12-25, Little information that entices the user to play the game making it colorful and aethetically pleasing.
    
 11. Create mock-ups for the overall look, user interface design, dialogue windows and input mechanisms.
+
+<img width="1084" height="1140" alt="image" src="https://github.com/user-attachments/assets/318eeda6-939a-47b2-82b6-2949a2b2325d" />
+
+<img width="478" height="759" alt="image" src="https://github.com/user-attachments/assets/2916741e-df62-406b-bc26-7a16dffde9da" />
+
+
 12. Construct basic storyboards associated with the game play.
 13. Identify and rank potential risks to the project’s success (such as technical knowledge, coding, testing, scope and dependencies). This should not include time management.
 14. Identify and establish your software development strategy.
