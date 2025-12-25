@@ -66,5 +66,31 @@ Going for a simple and sleek design that appeases the target audience being casu
 <img width="1024" height="1536" alt="ChatGPT Image Dec 25, 2025, 12_34_17 PM" src="https://github.com/user-attachments/assets/d2d4e0fa-6131-46e3-b078-4e093b1b6440" />
 
 13. Identify and rank potential risks to the project’s success (such as technical knowledge, coding, testing, scope and dependencies). This should not include time management.
+The following risks were identified during planning and are ranked based on their potential impact on the successful delivery of the Hangman game. Time management has not been included.
+
+1. Coding and Game Logic Errors (High Risk)
+
+There is a risk that errors in the JavaScript game logic could cause incorrect win or loss conditions, letters not revealing correctly, or lives not updating as expected. As Hangman relies heavily on conditional logic and state tracking, bugs in these areas could prevent the game from functioning correctly.
+
+2. Input Handling and Validation Issues (High Risk)
+
+Incorrect handling of user input (such as repeated guesses, non-alphabet characters, or rapid key presses) could break the gameplay experience. Poor input validation may also lead to unfair loss of lives or confusion for the player.
+
+3. User Interface and Feedback Problems (Medium Risk)
+
+There is a risk that the user interface may not update correctly after each guess, causing a mismatch between the game logic and what the user sees on screen. This includes incorrect colour feedback for used letters or unclear messages after guesses.
+
+4. Accessibility and Usability Limitations (Medium Risk)
+
+If keyboard-only interaction, visual contrast, or feedback clarity is not implemented properly, some users may struggle to play the game. This could negatively affect the overall usability and assessment outcome.
+
+5. Scope Creep (Low–Medium Risk)
+
+There is a risk of adding unnecessary features such as advanced scoring systems, animations, or multiplayer functionality, which could complicate the codebase and reduce overall stability.
+
+6. Dependency on External Assets (Low Risk)
+
+If external word lists or assets are used and become unavailable, the game may fail to load or function correctly. This risk is reduced by keeping all assets locally within the project files.
 14. Identify and establish your software development strategy.
+
 15. Define an overall test plan (this will be used later and may be repeated several times to ensure the project is successful).
