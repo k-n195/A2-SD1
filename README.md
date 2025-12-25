@@ -63,6 +63,8 @@ Going for a simple and sleek design that appeases the target audience being casu
 
 
 12. Construct basic storyboards associated with the game play.
+<img width="1024" height="1536" alt="ChatGPT Image Dec 25, 2025, 12_34_17 PM" src="https://github.com/user-attachments/assets/d2d4e0fa-6131-46e3-b078-4e093b1b6440" />
+
 13. Identify and rank potential risks to the project’s success (such as technical knowledge, coding, testing, scope and dependencies). This should not include time management.
 14. Identify and establish your software development strategy.
 15. Define an overall test plan (this will be used later and may be repeated several times to ensure the project is successful).
