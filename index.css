@@ -1,0 +1,23 @@
+/* Global base styles */
+:root {
+  --bg: #f4f4f4;
+  --text: #111;
+  --card: #ffffff;
+  --border: #dddddd;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, Arial, sans-serif;
+}
