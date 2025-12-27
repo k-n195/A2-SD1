@@ -281,9 +281,12 @@ If all letters in the secret word are guessed, the state changes to won.
 Invalid or repeated guesses are ignored.
 
 In multiplayer mode, the game state is shared online so both players remain synchronised in real time.
+ACTIVITY 2- KALID
 
 
 
+PEER REVIEW POST DOCUMENTATION:
+SUBMITTED SEPERATELY.
 
 
 
