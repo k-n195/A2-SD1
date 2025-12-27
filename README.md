@@ -163,6 +163,24 @@ Rayan and Kalid Implementing the JavaScript and tweaking fixes
 Rayan and Kalid Test plan
 
 
+activity 2:
+1. Agreed Project Requirements 
+
+The project is a browser-based Hangman game designed to be simple, reliable, and achievable within the available time and technical skills.
+
+Functional Requirements
+
+The game must support single-player gameplay, where a random word is selected and the player guesses letters until they either win or reach the maximum number of mistakes.
+
+The game must support online multiplayer, allowing two players on separate devices to play the same game using a room-code system.
+
+In multiplayer mode, one player (host) must be able to create a room and set the secret word, while the second player joins using the room code.
+
+The game must synchronise gameplay in real time, ensuring both players see the same guessed letters, mistake count, and game result.
+
+The system must prevent duplicate guesses and handle both win and loss conditions correctly.
+
+Clear feedback must be provided, including the current word state, number of mistakes, and final result.
 
 
 
