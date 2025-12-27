@@ -195,6 +195,12 @@ The system must be maintainable, using clear logic and simple functions that can
 These requirements were agreed as realistic and achievable within the project scope and timeframe.
 
 
+2. flowchart:
+
+   <img width="806" height="663" alt="image" src="https://github.com/user-attachments/assets/ef1917c0-02bf-45a7-9dbb-4813c1560739" />
+
+
+
 PSEUDO CODE: 
 game setup:
 SET MAX_MISTAKES = 6
@@ -254,6 +260,28 @@ end of game logic:
 DISPLAY result (win or lose)
 REVEAL secretWord
 ALLOW players to leave or start a new round
+
+4. 
+Game State Management
+
+The game uses a simple state system to control gameplay.
+
+Possible states are: start (waiting), playing, won, and lost.
+
+When a game begins, the state changes to playing and all game values are reset.
+
+Each letter guess updates the game state.
+
+Incorrect guesses increase the mistake counter.
+
+If the mistake limit is reached, the state changes to lost.
+
+If all letters in the secret word are guessed, the state changes to won.
+
+Invalid or repeated guesses are ignored.
+
+In multiplayer mode, the game state is shared online so both players remain synchronised in real time.
+
 
 
 
