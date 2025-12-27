@@ -195,6 +195,69 @@ The system must be maintainable, using clear logic and simple functions that can
 These requirements were agreed as realistic and achievable within the project scope and timeframe.
 
 
+PSEUDO CODE: 
+game setup:
+SET MAX_MISTAKES = 6
+INITIALISE guessedLetters as empty set
+INITIALISE mistakes = 0
+SET gameStatus = "playing"
+
+single player:
+SELECT random secretWord
+WHILE gameStatus is "playing":
+    WAIT for player to guess a letter
+
+   IF letter already guessed:
+        IGNORE input
+   ELSE:
+        ADD letter to guessedLetters
+
+   IF letter NOT in secretWord:
+            INCREMENT mistakes
+
+   IF mistakes == MAX_MISTAKES:
+            SET gameStatus = "lost"
+
+   IF all letters in secretWord are guessed:
+            SET gameStatus = "won"
+
+Multiplayer Word Setup:
+HOST enters secretWord
+NORMALISE secretWord (uppercase, letters and spaces only)
+STORE secretWord in shared room state
+SET roomStatus = "playing"
+
+Multiplayer Guess Logic:
+WHEN a player guesses a letter:
+    READ current room state
+
+   IF roomStatus is not "playing":
+        STOP
+
+ IF letter already guessed:
+        STOP
+
+   ADD letter to guessedLetters
+
+   IF letter NOT in secretWord:
+        INCREMENT mistakes
+
+   IF mistakes == MAX_MISTAKES:
+        SET roomStatus = "lost"
+
+   IF all letters in secretWord are guessed:
+        SET roomStatus = "won"
+
+   UPDATE shared room state
+
+end of game logic:
+DISPLAY result (win or lose)
+REVEAL secretWord
+ALLOW players to leave or start a new round
+
+
+
+
 
 
 
