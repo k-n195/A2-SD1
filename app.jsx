@@ -1,34 +1,39 @@
 import { useEffect, useMemo, useState } from "react";
 import "./App.css";
-import { db } from "./firebase";
 
+// Firebase (Firestore)
+import { db } from "./firebase";
 import {
   doc,
   setDoc,
-  onSnapshot,
-  runTransaction,
-  serverTimestamp,
   getDoc,
+  updateDoc,
+  onSnapshot,
+  serverTimestamp,
+  arrayUnion,
 } from "firebase/firestore";
 
 const MAX_MISTAKES = 6;
 const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
-const WORDS = ["HANGMAN", "SOFTWARE", "MOBILE APP", "ENGINEERING", "DEBUGGING", "REACT"];
-
-function pickRandom(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
+function makeRoomCode() {
+  // 6-char code, easy to type
+  const chars = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
+  let code = "";
+  for (let i = 0; i < 6; i++) code += chars[Math.floor(Math.random() * chars.length)];
+  return code;
 }
 
-function normalizeSecret(input) {
+function sanitizeWord(input) {
   return input
     .toUpperCase()
-    .replace(/[^A-Z ]/g, "")
+    .replace(/[^A-Z ]/g, "") // allow letters and spaces only
     .replace(/\s+/g, " ")
     .trim();
 }
 
-function maskedWord(secret, guessed) {
+function maskedWord(secret, guessedArr) {
+  const guessed = new Set(guessedArr);
   return secret
     .split("")
     .map((c) => {
@@ -39,7 +44,8 @@ function maskedWord(secret, guessed) {
     .join("");
 }
 
-function isWin(secret, guessed) {
+function isWin(secret, guessedArr) {
+  const guessed = new Set(guessedArr);
   for (const c of secret) {
     if (/[A-Z]/.test(c) && !guessed.has(c)) return false;
   }
@@ -67,346 +73,294 @@ ${ll} ${rl}  |
   );
 }
 
-function makeRoomCode() {
-  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-  let out = "";
-  for (let i = 0; i < 6; i++) out += chars[Math.floor(Math.random() * chars.length)];
-  return out;
-}
-
 export default function App() {
-  // screens: menu | game | onlineMenu | enterWord | onlineRoom
+  // screens: menu, host_create, host_setword, guest_join, game
   const [screen, setScreen] = useState("menu");
 
-  // ---------- single player state ----------
-  const [secret, setSecret] = useState("");
-  const [guessed, setGuessed] = useState(new Set());
-  const [mistakes, setMistakes] = useState(0);
-  const [status, setStatus] = useState("playing"); // playing | won | lost
-  const guessedList = useMemo(() => [...guessed].sort(), [guessed]);
+  // local inputs
+  const [roomCodeInput, setRoomCodeInput] = useState("");
+  const [secretInput, setSecretInput] = useState("");
+  const [error, setError] = useState("");
 
-  function startSingle() {
-    setSecret(pickRandom(WORDS));
-    setGuessed(new Set());
-    setMistakes(0);
-    setStatus("playing");
-    setScreen("game");
-  }
-
-  function guessLocal(letter) {
-    if (status !== "playing") return;
-    if (guessed.has(letter)) return;
-
-    const next = new Set(guessed);
-    next.add(letter);
-    setGuessed(next);
-
-    if (!secret.includes(letter)) {
-      const m = mistakes + 1;
-      setMistakes(m);
-      if (m >= MAX_MISTAKES) setStatus("lost");
-    } else {
-      if (isWin(secret, next)) setStatus("won");
-    }
-  }
-
-  // ---------- online multiplayer state ----------
+  // multiplayer state
+  const [role, setRole] = useState(null); // "host" | "guest"
   const [roomCode, setRoomCode] = useState("");
-  const [roomInput, setRoomInput] = useState("");
-  const [isHost, setIsHost] = useState(false);
-  const [wordInput, setWordInput] = useState("");
+  const [room, setRoom] = useState(null); // firestore doc data
 
-  // mirrored room state from Firestore
-  const [rSecret, setRSecret] = useState("");
-  const [rGuessed, setRGuessed] = useState(new Set());
-  const [rMistakes, setRMistakes] = useState(0);
-  const [rStatus, setRStatus] = useState("waiting"); // waiting | playing | won | lost
-  const rGuessedList = useMemo(() => [...rGuessed].sort(), [rGuessed]);
-
+  // realtime listener
   useEffect(() => {
     if (!roomCode) return;
     const ref = doc(db, "rooms", roomCode);
-
     const unsub = onSnapshot(ref, (snap) => {
-      if (!snap.exists()) return;
-      const data = snap.data();
-      setRSecret(data.secret || "");
-      setRGuessed(new Set(data.guessed || []));
-      setRMistakes(data.mistakes ?? 0);
-      setRStatus(data.status || "waiting");
+      if (!snap.exists()) {
+        setError("Room not found (it may have been deleted).");
+        setRoom(null);
+        return;
+      }
+      setRoom(snap.data());
     });
-
     return () => unsub();
   }, [roomCode]);
 
-  async function createRoom() {
+  const guessedList = useMemo(() => {
+    const arr = room?.guessed ?? [];
+    return [...arr].sort();
+  }, [room]);
+
+  async function createRoomAsHost() {
+    setError("");
     const code = makeRoomCode();
     const ref = doc(db, "rooms", code);
 
     await setDoc(ref, {
-      createdAt: serverTimestamp(),
-      status: "waiting",
+      hostConnected: true,
+      guestConnected: false,
       secret: "",
+      guessed: [],
+      mistakes: 0,
+      maxMistakes: MAX_MISTAKES,
+      status: "waiting",
+      createdAt: serverTimestamp(),
+    });
+
+    setRole("host");
+    setRoomCode(code);
+    setScreen("host_setword");
+  }
+
+  async function hostSetSecret() {
+    setError("");
+    const clean = sanitizeWord(secretInput);
+    if (!clean || clean.length < 2) {
+      setError("Secret word must be at least 2 letters.");
+      return;
+    }
+
+    const ref = doc(db, "rooms", roomCode);
+    await updateDoc(ref, {
+      secret: clean,
+      status: "playing",
       guessed: [],
       mistakes: 0,
     });
 
-    setRoomCode(code);
-    setIsHost(true);
-    setWordInput("");
-    setScreen("enterWord");
+    setSecretInput("");
+    setScreen("game");
   }
 
-  async function joinRoom() {
-    const code = roomInput.trim().toUpperCase();
-    if (!code) return;
+  async function joinRoomAsGuest() {
+    setError("");
+    const code = roomCodeInput.trim().toUpperCase();
+    if (code.length < 4) {
+      setError("Enter a valid room code.");
+      return;
+    }
 
     const ref = doc(db, "rooms", code);
     const snap = await getDoc(ref);
+
     if (!snap.exists()) {
-      alert("Room not found. Check the code.");
+      setError("Room code not found.");
       return;
     }
 
+    await updateDoc(ref, { guestConnected: true });
+
+    setRole("guest");
     setRoomCode(code);
-    setIsHost(false);
-    setScreen("onlineRoom");
+    setRoomCodeInput("");
+    setScreen("game");
   }
 
-  async function hostSetWord() {
-    const normalized = normalizeSecret(wordInput);
-    if (normalized.length < 2) {
-      alert("Enter a longer word/phrase (letters and spaces only).");
-      return;
+  async function guessLetter(letter) {
+    setError("");
+    if (!room) return;
+    if (role !== "guest") return; // only guest guesses in this simple model
+    if (room.status !== "playing") return;
+    if (!room.secret) return;
+
+    const already = (room.guessed ?? []).includes(letter);
+    if (already) return;
+
+    const ref = doc(db, "rooms", roomCode);
+    const secret = room.secret;
+    const guessedNext = [...(room.guessed ?? []), letter];
+    const wrong = !secret.includes(letter);
+
+    let mistakesNext = room.mistakes ?? 0;
+    if (wrong) mistakesNext += 1;
+
+    // compute status
+    let statusNext = "playing";
+    if (mistakesNext >= (room.maxMistakes ?? MAX_MISTAKES)) {
+      statusNext = "lost";
+    } else if (isWin(secret, guessedNext)) {
+      statusNext = "won";
     }
 
-    const ref = doc(db, "rooms", roomCode);
-    await setDoc(
-      ref,
-      { status: "playing", secret: normalized, guessed: [], mistakes: 0 },
-      { merge: true }
-    );
-
-    setScreen("onlineRoom");
-  }
-
-  async function guessOnline(letter) {
-    if (!roomCode) return;
-    const ref = doc(db, "rooms", roomCode);
-
-    await runTransaction(db, async (tx) => {
-      const snap = await tx.get(ref);
-      if (!snap.exists()) return;
-
-      const data = snap.data();
-      if (data.status !== "playing") return;
-
-      const secret = data.secret || "";
-      const guessedArr = data.guessed || [];
-      const guessedSet = new Set(guessedArr);
-
-      if (guessedSet.has(letter)) return;
-      guessedSet.add(letter);
-
-      let mistakes = data.mistakes ?? 0;
-      let status = "playing";
-
-      if (!secret.includes(letter)) {
-        mistakes += 1;
-        if (mistakes >= MAX_MISTAKES) status = "lost";
-      } else {
-        if (isWin(secret, guessedSet)) status = "won";
-      }
-
-      tx.update(ref, {
-        guessed: [...guessedSet],
-        mistakes,
-        status,
-      });
+    await updateDoc(ref, {
+      guessed: arrayUnion(letter),
+      mistakes: mistakesNext,
+      status: statusNext,
     });
   }
 
-  function leaveOnline() {
-    setRoomCode("");
-    setRoomInput("");
-    setIsHost(false);
-    setWordInput("");
-    setRSecret("");
-    setRGuessed(new Set());
-    setRMistakes(0);
-    setRStatus("waiting");
-    setScreen("onlineMenu");
+  async function hostRestart() {
+    setError("");
+    if (!room) return;
+    if (role !== "host") return;
+
+    const ref = doc(db, "rooms", roomCode);
+    await updateDoc(ref, {
+      secret: "",
+      guessed: [],
+      mistakes: 0,
+      status: "waiting",
+    });
+    setScreen("host_setword");
   }
 
-  // ---------- UI ----------
+  function backToMenu() {
+    setError("");
+    setRole(null);
+    setRoomCode("");
+    setRoom(null);
+    setScreen("menu");
+  }
+
+  // -------- UI --------
+
   if (screen === "menu") {
     return (
       <div className="container">
-        <h1>Hangman</h1>
-        <div className="card">
-          <button className="btn primary full" onClick={startSingle}>
-            Single Player
-          </button>
+        <h1>Hangman (Multiplayer)</h1>
 
-          <button className="btn full" onClick={() => setScreen("onlineMenu")}>
-            Online Multiplayer (2 devices)
-          </button>
+        <div className="card">
+          <div className="gap">
+            <button className="btn primary" onClick={createRoomAsHost}>
+              Host: Create Room
+            </button>
+            <button className="btn" onClick={() => setScreen("guest_join")}>
+              Guest: Join Room
+            </button>
+          </div>
 
           <p className="hint">
-            Online mode uses a room code so two devices share the same game.
+            Host creates a room and sets the secret word. Guest joins with the code and guesses.
           </p>
+
+          {error && <div className="error">{error}</div>}
         </div>
       </div>
     );
   }
 
-  if (screen === "onlineMenu") {
+  if (screen === "guest_join") {
     return (
       <div className="container">
         <div className="header">
-          <h1>Online Multiplayer</h1>
-          <button className="btn" onClick={() => setScreen("menu")}>
-            Menu
-          </button>
+          <h1>Join Room</h1>
+          <button className="btn" onClick={backToMenu}>Menu</button>
         </div>
 
         <div className="card">
-          <button className="btn primary full" onClick={createRoom}>
-            Create Room (Host)
-          </button>
+          <label>
+            Room Code:
+            <input
+              className="input"
+              value={roomCodeInput}
+              onChange={(e) => setRoomCodeInput(e.target.value)}
+              placeholder="e.g. A1B2C3"
+            />
+          </label>
 
-          <label className="label">Join room code</label>
-          <input
-            className="input"
-            value={roomInput}
-            onChange={(e) => setRoomInput(e.target.value)}
-            placeholder="e.g. A7K3PZ"
-          />
-          <button className="btn full" onClick={joinRoom}>
+          <button className="btn primary full" onClick={joinRoomAsGuest}>
             Join
           </button>
 
-          <p className="hint">
-            Host creates a room and shares the code with the other device.
-          </p>
+          {error && <div className="error">{error}</div>}
         </div>
       </div>
     );
   }
 
-  if (screen === "enterWord") {
+  if (screen === "host_setword") {
     return (
       <div className="container">
         <div className="header">
-          <h1>Host Setup</h1>
-          <button className="btn" onClick={leaveOnline}>
-            Back
-          </button>
+          <h1>Host Room</h1>
+          <button className="btn" onClick={backToMenu}>Menu</button>
         </div>
 
         <div className="card">
+          <p><strong>Room Code:</strong> {roomCode}</p>
           <p className="hint">
-            Room Code: <strong style={{ letterSpacing: 1 }}>{roomCode}</strong>
-            <br />
-            Share this with Player 2.
+            Share this code with the guest. Wait for them to join, then set the secret word.
           </p>
-
-          <label className="label">Secret word/phrase</label>
-          <input
-            className="input"
-            type="password"
-            value={wordInput}
-            onChange={(e) => setWordInput(e.target.value)}
-            placeholder="Letters and spaces only"
-          />
-
-          <button className="btn primary full" onClick={hostSetWord}>
-            Start Game
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  if (screen === "onlineRoom") {
-    return (
-      <div className="container">
-        <div className="header">
-          <h1>Online Room</h1>
-          <button className="btn" onClick={leaveOnline}>
-            Leave
-          </button>
-        </div>
-
-        <div className="card">
-          <p className="hint">
-            Room: <strong style={{ letterSpacing: 1 }}>{roomCode}</strong>{" "}
-            {isHost ? "(Host)" : "(Guest)"}
-          </p>
-
-          {rStatus === "waiting" && <p className="hint">Waiting for host to start…</p>}
 
           <p>
-            <strong>Mistakes:</strong> {rMistakes} / {MAX_MISTAKES}
+            <strong>Guest connected:</strong> {room?.guestConnected ? "Yes" : "No"}
           </p>
 
-          <HangmanAscii mistakes={rMistakes} />
+          <label>
+            Secret word (letters/spaces only):
+            <input
+              className="input"
+              value={secretInput}
+              onChange={(e) => setSecretInput(e.target.value)}
+              placeholder="e.g. SOFTWARE"
+              type="password"
+            />
+          </label>
 
-          <div className="word">{rSecret ? maskedWord(rSecret, rGuessed) : "_ _ _"}</div>
+          <button
+            className="btn primary full"
+            onClick={hostSetSecret}
+            disabled={!room?.guestConnected}
+            title={!room?.guestConnected ? "Guest must join first" : ""}
+          >
+            Start Game
+          </button>
 
-          <div className="row">
-            <strong>Guessed:</strong> {rGuessedList.join(", ")}
-          </div>
-
-          <div className="keyboard">
-            {LETTERS.map((l) => (
-              <button
-                key={l}
-                className="key"
-                disabled={rGuessed.has(l) || rStatus !== "playing"}
-                onClick={() => guessOnline(l)}
-              >
-                {l}
-              </button>
-            ))}
-          </div>
-
-          {rStatus !== "playing" && rStatus !== "waiting" && (
-            <div className="result">
-              <h2>{rStatus === "won" ? "Win!" : "Game Over"}</h2>
-              <p>
-                The word was: <strong>{rSecret}</strong>
-              </p>
-              {isHost && (
-                <button className="btn primary" onClick={() => setScreen("enterWord")}>
-                  New Word (Host)
-                </button>
-              )}
-            </div>
-          )}
+          {error && <div className="error">{error}</div>}
         </div>
       </div>
     );
   }
 
-  // single player game screen (your original)
+  // GAME SCREEN
+  const secret = room?.secret ?? "";
+  const guessed = room?.guessed ?? [];
+  const mistakes = room?.mistakes ?? 0;
+  const status = room?.status ?? "waiting";
+
   return (
     <div className="container">
       <div className="header">
         <h1>Hangman</h1>
-        <button className="btn" onClick={() => setScreen("menu")}>
-          Menu
-        </button>
+        <button className="btn" onClick={backToMenu}>Menu</button>
       </div>
 
       <div className="card">
+        <p>
+          <strong>Room:</strong> {roomCode} &nbsp;|&nbsp; <strong>You:</strong> {role}
+        </p>
+
+        {status === "waiting" && (
+          <p className="hint">
+            Waiting for host to set the word...
+          </p>
+        )}
+
         <p>
           <strong>Mistakes:</strong> {mistakes} / {MAX_MISTAKES}
         </p>
 
         <HangmanAscii mistakes={mistakes} />
 
-        <div className="word">{maskedWord(secret, guessed)}</div>
+        <div className="word">
+          {status === "waiting" ? "_ _ _ _" : maskedWord(secret, guessed)}
+        </div>
 
         <div className="row">
           <strong>Guessed:</strong> {guessedList.join(", ")}
@@ -417,25 +371,36 @@ export default function App() {
             <button
               key={l}
               className="key"
-              disabled={guessed.has(l) || status !== "playing"}
-              onClick={() => guessLocal(l)}
+              disabled={role !== "guest" || status !== "playing" || guessed.includes(l)}
+              onClick={() => guessLetter(l)}
+              title={role !== "guest" ? "Only guest guesses in this mode" : ""}
             >
               {l}
             </button>
           ))}
         </div>
 
-        {status !== "playing" && (
+        {status === "won" && (
           <div className="result">
-            <h2>{status === "won" ? "You Win!" : "Game Over"}</h2>
-            <p>
-              The word was: <strong>{secret}</strong>
-            </p>
-            <button className="btn primary" onClick={startSingle}>
-              Play Again
-            </button>
+            <h2>Guest Wins!</h2>
+            <p>The word was: <strong>{secret}</strong></p>
+            {role === "host" && (
+              <button className="btn primary" onClick={hostRestart}>Play Again (Host)</button>
+            )}
           </div>
         )}
+
+        {status === "lost" && (
+          <div className="result">
+            <h2>Game Over</h2>
+            <p>The word was: <strong>{secret}</strong></p>
+            {role === "host" && (
+              <button className="btn primary" onClick={hostRestart}>Play Again (Host)</button>
+            )}
+          </div>
+        )}
+
+        {error && <div className="error">{error}</div>}
       </div>
     </div>
   );
