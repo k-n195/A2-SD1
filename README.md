@@ -182,6 +182,19 @@ The system must prevent duplicate guesses and handle both win and loss condition
 
 Clear feedback must be provided, including the current word state, number of mistakes, and final result.
 
+Non-Functional Requirements
+
+The game must be easy to use on both desktop and mobile devices but mainly on mobile.
+
+The interface must be clear and readable, with visible buttons and feedback.
+
+Multiplayer synchronisation must be fast and reliable, with minimal delay between devices.
+
+The system must be maintainable, using clear logic and simple functions that can be easily tested and updated.
+
+These requirements were agreed as realistic and achievable within the project scope and timeframe.
+
+
 
 
 
