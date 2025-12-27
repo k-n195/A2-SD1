@@ -142,3 +142,30 @@ Result: Pass.
 Resized the screen to a mobile view.
 Expected: The layout remains readable and usable.
 Result: Pass.
+
+
+Responsibilities between partners.
+
+Kalid activity 1 
+
+Rayan activity 1 
+
+Rayan and Kalid running the app and browser for the hangman game 
+
+Rayan and Kalid Firebase activation and changing code for multiplayer pass and play.
+
+Rayan implementing the csss
+
+Kalid implementing the HTML
+
+Rayan and Kalid Implementing the JavaScript and tweaking fixes
+
+Rayan and Kalid Test plan
+
+
+
+
+
+
+
+
