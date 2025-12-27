@@ -106,3 +106,8 @@
   gap: 10px;
   flex-wrap: wrap;
 }
+.label {
+  display: block;
+  margin-top: 12px;
+  font-weight: 700;
+}
